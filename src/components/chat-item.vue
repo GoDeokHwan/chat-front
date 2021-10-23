@@ -1,0 +1,57 @@
+<template>
+  <div class="item-area">
+    <div class="item-title">제목</div>
+    <div class="item-text">내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "chat-item",
+  methods: {
+
+  }
+}
+</script>
+
+<style scoped>
+.item-area {
+  height: 80px;
+  width: calc(100% - 1px);
+  border: 1px solid gray;
+}
+
+.item-title {
+  width: 98%;
+  height: 35%;
+  border-bottom: 1px solid gray;
+  color: black;
+  font: message-box;
+  font-family: math;
+  text-align: left;
+  padding: 2px 5px 2px 5px;
+}
+
+.item-text {
+  width: 98%;
+  height: 65%;
+  color: black;
+  font: message-box;
+  font-family: math;
+  text-align: left;
+  padding: 2px 5px 2px 5px;
+
+  display: -webkit-box;
+  display: -ms-flexbox;
+  margin-top:1px;
+  max-height:54%;
+  overflow:hidden;
+  vertical-align:top;
+  text-overflow: ellipsis;
+  word-break:break-all;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+
+}
+
+</style>
