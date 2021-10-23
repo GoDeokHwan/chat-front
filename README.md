@@ -41,5 +41,3 @@ npm run build
 ```shell
 npm run clean
 ```
-
-## 📜문법
