@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 
 const routes = [
     {
-        path: "/",
+        path: "/home",
         name: "Home",
         component: () => import("../views/Home.vue"),
     },
@@ -22,4 +22,31 @@ const router = new VueRouter({
     routes
 })
 
+// router.beforeEach((to, from, next) => {
+    // const isValidToken = !!localStorage.getItem('token')
+    // try {
+    //     if (isValidToken) {
+    //
+    //
+    //     } else if (to.path === '/login') {
+    //
+    //     } else {
+    //         next('login')
+    //     }
+    // } catch (e) {
+    //     console.error(e)
+    // }
+// })
+router.afterEach((to, from) => {
+    const isValidToken = !!localStorage.getItem('token')
+    try {
+        if (isValidToken) {
+            router.push('/home')
+        } else {
+            router.push('/login')
+        }
+    } catch (e) {
+        console.error(e)
+    }
+})
 export default router

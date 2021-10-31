@@ -5,12 +5,12 @@
         <div style="margin-top: calc(100% - 117px);">
           <h1>LOGIN</h1>
           <div class="idForm">
-            <input type="text" class="input-css id" placeholder="ID">
+            <input type="text" class="input-css id" placeholder="ID" v-model="id">
           </div>
           <div class="passForm" style="margin-top: 20px; margin-bottom: 20px;">
-            <input type="password" class="input-css pw" placeholder="PW">
+            <input type="password" class="input-css pw" placeholder="PW" v-model="pw">
           </div>
-          <button type="button" class="btn btn-salmon" onclick="button()">
+          <button type="button" class="btn btn-salmon" v-on:click="login">
             LOGIN
           </button>
         </div>
@@ -23,10 +23,28 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
   name: "Login",
-  mounted() {
-
+  data() {
+    return {
+      id: '',
+      pw: ''
+    }
+  },
+  methods: {
+    login () {
+      this.$store.dispatch('login', {
+        loginId: this.id,
+        password: this.pw
+      }).then((res) => {
+        debugger
+        if (res.isSuccess) {
+          this.$router.push('/home')
+        }
+      })
+    }
   }
 }
 </script>

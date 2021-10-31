@@ -42,13 +42,43 @@
 <script>
 import chatItem from '../components/chat-item.vue'
 import chatContents from '../components/chat-contents.vue'
+import eventBus from '../event_bus'
+import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   name: 'Home',
   components: { chatItem, chatContents },
+  computed: {
+    ...mapGetters([
+      'subscribe'
+    ])
+  },
   data() {
     return {
       total: 0
+    }
+  },
+  created() {
+    this.connectWebSocket()
+    eventBus.$on('chat-socket-connection_success', () => {
+      this.chatRoomAllSubscribe()
+    })
+  },
+  beforeDestroy() {
+    eventBus.$off('chat-socket-connection_success')
+  },
+  methods: {
+    connectWebSocket() {
+      this.$store.dispatch('call_connect')
+    },
+    chatRoomAllSubscribe () {
+      this.subscribe({
+        subscriptionUrl: `/api/subscribe/user/1`,
+        callBack: this.chatRoomAllWebSocketData
+      })
+    },
+    chatRoomAllWebSocketData (data) {
+      console.log(data)
     }
   }
 }
