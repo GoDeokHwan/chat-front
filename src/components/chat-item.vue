@@ -1,13 +1,41 @@
 <template>
   <div class="item-area">
-    <div class="item-title">제목</div>
-    <div class="item-text">내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용</div>
+    <div class="item-title">{{title}}
+      <span style="float: right">{{lastTime}}</span>
+    </div>
+    <div class="item-text">{{textMessage}}</div>
   </div>
 </template>
 
 <script>
 export default {
   name: "chat-item",
+  props: {
+    title: {
+      type: String
+    },
+    lastTime: {
+      type: String
+    },
+    message: {
+      type: String
+    }
+  },
+  data () {
+    return {
+      textMessage: '',
+      propsMessage: this.message
+    }
+  },
+  created() {
+    if (this.propsMessage) {
+      let obj = JSON.parse(this.propsMessage)
+      if (obj.type == 'TEXT') {
+        this.textMessage = obj.message
+      }
+    }
+    // this.textMessage
+  },
   methods: {
 
   }

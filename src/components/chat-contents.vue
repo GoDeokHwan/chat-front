@@ -1,23 +1,35 @@
 <template>
   <div>
-    <div class="message-area you-message">
-      <div class="title-circle title-position-you"></div>
-      <div class="message-box">상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에
-        메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지</div>
+    <div v-for="item in messageList">
+      <div class="message-area you-message" v-if="!item.isMy">
+        <div class="title-circle title-position-you"></div>
+        <div class="message-box">{{item}}</div>
+      </div>
+      <div class="message-area my-message" v-else>
+        <div class="message-box" style="margin-right: 10px; text-align: left;">{{item.message}}</div>
+        <div class="title-circle title-position-my"></div>
+      </div>
     </div>
-    <div class="message-area my-message">
-      <div class="message-box" style="margin-right: 10px; text-align: left;">상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에
-        메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지상대방에 메시지</div>
-      <div class="title-circle title-position-my"></div>
-    </div>
-
-
   </div>
 </template>
 
 <script>
 export default {
-  name: "chat-contents"
+  name: 'chat-contents',
+  props: ['messageItem'],
+  data () {
+    return {
+      messageList: this.messageItem
+    }
+  },
+  created() {
+    this.messageList.map(m => {
+      let obj = JSON.parse(m.context)
+      m['message'] = obj.message
+      m['type'] = obj.type
+      return m
+    })
+  }
 }
 </script>
 

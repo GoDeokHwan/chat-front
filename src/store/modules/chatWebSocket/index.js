@@ -13,7 +13,7 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const getters = {
-
+    IS_CONNECT_SUCCESS: (state) => { return state.isConnected }
 }
 
 const mutations = {
@@ -48,7 +48,10 @@ const mutations = {
         }
     },
     subscribe (state, payload) {
-        let subscription = state.subscriptions.find(payload.key)
+        let subscription
+        if (state.subscriptions.length > 0) {
+            subscription = state.subscriptions.find(payload.key)
+        }
         if (subscription === undefined) {
             subscription = state.stompClient.subscribe(payload.subscribeUrl, tick => payload.callback(JSON.parse(tick.body), payload.chatRoom))
             const  newSubscription = {
@@ -79,8 +82,7 @@ const actions = {
         commit('START_CHAT_API_CONNECT')
         // state.stompClient = Stomp.over(new SockJS('http://localhost:8180/api/webSocket'))
         state.stompClient = StompClient.over(new SockJS('http://localhost:8180/api/webSocket'))
-        state.stompClient.connect(
-            {},
+        state.stompClient.connect({},
             frame => {
                 commit('END_CHAT_API_CONNECT')
                 eventBus.$emit('chat-socket-connection_success')

@@ -39,10 +39,13 @@ export default {
         loginId: this.id,
         password: this.pw
       }).then((res) => {
-        debugger
         if (res.isSuccess) {
           this.$router.push('/home')
+        } else {
+          alert(res.data.message)
         }
+      }).catch(err => {
+        alert(err)
       })
     }
   }

@@ -38,12 +38,16 @@ export const store = new Vuex.Store({
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             }).then((res) => {
+                console.log(res)
                 try {
                     const  responseData = res.data
                     if (res.status === 200 && responseData.token) {
                         localStorage.setItem("token", responseData.token)
                         loginResponse.data = { token: responseData.token}
                         loginResponse.isSuccess = true
+                    } else {
+                        loginResponse.isSuccess = false
+                        loginResponse.data = {message: responseData.message}
                     }
                     return loginResponse
                 } catch (result) {
