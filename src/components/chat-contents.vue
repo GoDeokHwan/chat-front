@@ -1,14 +1,12 @@
 <template>
   <div>
-    <div v-for="item in messageList">
-      <div class="message-area you-message" v-if="!item.isMy">
-        <div class="title-circle title-position-you"></div>
-        <div class="message-box">{{item}}</div>
-      </div>
-      <div class="message-area my-message" v-else>
-        <div class="message-box" style="margin-right: 10px; text-align: left;">{{item.message}}</div>
-        <div class="title-circle title-position-my"></div>
-      </div>
+    <div class="message-area you-message" v-if="!messageObj.isMy">
+      <div class="title-circle title-position-you"></div>
+      <div class="message-box">{{messageObj.message}}</div>
+    </div>
+    <div class="message-area my-message" v-else>
+      <div class="message-box" style="margin-right: 10px; text-align: left;">{{messageObj.message}}</div>
+      <div class="title-circle title-position-my"></div>
     </div>
   </div>
 </template>
@@ -19,16 +17,13 @@ export default {
   props: ['messageItem'],
   data () {
     return {
-      messageList: this.messageItem
+      messageObj: this.messageItem
     }
   },
   created() {
-    this.messageList.map(m => {
-      let obj = JSON.parse(m.context)
-      m['message'] = obj.message
-      m['type'] = obj.type
-      return m
-    })
+    let obj = JSON.parse(this.messageObj.context)
+    this.messageObj['message'] = obj.message
+    this.messageObj['type'] = obj.type
   }
 }
 </script>

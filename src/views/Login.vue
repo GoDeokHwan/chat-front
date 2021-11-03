@@ -5,10 +5,10 @@
         <div style="margin-top: calc(100% - 117px);">
           <h1>LOGIN</h1>
           <div class="idForm">
-            <input type="text" class="input-css id" placeholder="ID" v-model="id">
+            <input type="text" class="input-css id" placeholder="ID" v-model="id" v-on:keyup.enter="login">
           </div>
           <div class="passForm" style="margin-top: 20px; margin-bottom: 20px;">
-            <input type="password" class="input-css pw" placeholder="PW" v-model="pw">
+            <input type="password" class="input-css pw" placeholder="PW" v-model="pw" v-on:keyup.enter="login">
           </div>
           <button type="button" class="btn btn-salmon" v-on:click="login">
             LOGIN
@@ -35,18 +35,22 @@ export default {
   },
   methods: {
     login () {
-      this.$store.dispatch('login', {
-        loginId: this.id,
-        password: this.pw
-      }).then((res) => {
-        if (res.isSuccess) {
-          this.$router.push('/home')
-        } else {
-          alert(res.data.message)
-        }
-      }).catch(err => {
-        alert(err)
-      })
+      if (!!this.id && !!this.pw) {
+        this.$store.dispatch('login', {
+          loginId: this.id,
+          password: this.pw
+        }).then((res) => {
+          if (res.isSuccess) {
+            this.$router.push('/home')
+          } else {
+            alert(res.data.message)
+          }
+        }).catch(err => {
+          alert(err)
+        })
+      } else {
+       alert('아이디 또는 비밀번호를 입력해주세요.')
+      }
     }
   }
 }

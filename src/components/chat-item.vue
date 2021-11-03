@@ -27,17 +27,23 @@ export default {
       propsMessage: this.message
     }
   },
+  watch: {
+    'message': function(nVal, oVal) {
+      if (this.message) {
+        let obj = JSON.parse(this.message)
+        if (obj.type == 'TEXT') {
+          this.textMessage = obj.message
+        }
+      }
+    }
+  },
   created() {
-    if (this.propsMessage) {
-      let obj = JSON.parse(this.propsMessage)
+    if (this.message) {
+      let obj = JSON.parse(this.message)
       if (obj.type == 'TEXT') {
         this.textMessage = obj.message
       }
     }
-    // this.textMessage
-  },
-  methods: {
-
   }
 }
 </script>

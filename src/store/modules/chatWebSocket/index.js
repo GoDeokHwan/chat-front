@@ -13,7 +13,8 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const getters = {
-    IS_CONNECT_SUCCESS: (state) => { return state.isConnected }
+    IS_CONNECT_SUCCESS: (state) => { return state.isConnected },
+    SUBSCRIPTIONS: (state) => { return state.subscriptions }
 }
 
 const mutations = {
@@ -50,14 +51,17 @@ const mutations = {
     subscribe (state, payload) {
         let subscription
         if (state.subscriptions.length > 0) {
-            subscription = state.subscriptions.find(payload.key)
+            let subscriptionArr = state.subscriptions.filter(s => s.key == payload.key)
+            if (subscriptionArr && subscriptionArr.length > 0) {
+                subscription = subscriptionArr[0]
+            }
         }
         if (subscription === undefined) {
-            subscription = state.stompClient.subscribe(payload.subscribeUrl, tick => payload.callback(JSON.parse(tick.body), payload.chatRoom))
+            subscription = state.stompClient.subscribe(payload.subscriptionUrl,
+                    tick => payload.callBack(JSON.parse(tick.body)))
             const  newSubscription = {
-                key: payload.key,
-                chatRoomId: payload.chatRoomId,
-                subscriptionUrl: payload.subscribeUrl,
+                key: payload.id,
+                subscriptionUrl: payload.subscriptionUrl,
                 id: subscription.id,
                 subscription: subscription
             }

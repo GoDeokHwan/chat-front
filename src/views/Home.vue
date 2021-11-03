@@ -27,8 +27,8 @@
             </div>
           </div>
           <div style="float: bottom; border-top: 1px solid gray;">
-            <input type="text" class="input-css input-position" placeholder="메시지를 입력해주세요."/>
-            <button class="btn btn-size">전송</button>
+            <input type="text" class="input-css input-position" placeholder="메시지를 입력해주세요." v-model="textMessage" v-on:keyup.enter="send"/>
+            <button class="btn btn-size" v-on:click="send">전송</button>
           </div>
         </div>
       </div>
@@ -47,7 +47,8 @@ export default {
   components: { chatItem, chatContents },
   computed: {
     ...mapGetters([
-      'IS_CONNECT_SUCCESS'
+      'IS_CONNECT_SUCCESS',
+      'SUBSCRIPTIONS'
     ])
   },
   data() {
@@ -57,7 +58,8 @@ export default {
       name: null,
       chatList: [],
       openMessageList: [],
-      selectChatRoomId: null
+      selectChatRoomId: null,
+      textMessage: ''
     }
   },
   created() {
@@ -84,7 +86,8 @@ export default {
   },
   methods: {
     ...mapMutations([
-        'subscribe'
+        'subscribe',
+        'closeSubscription'
     ]),
     connectWebSocket() {
       this.$store.dispatch('chat_api_connect')
@@ -92,11 +95,17 @@ export default {
     chatRoomAllSubscribe () {
       this.subscribe({
         subscriptionUrl: `/api/subscribe/user/${this.userId}`,
+        id: `user_${this.userId}`,
         callBack: this.chatRoomAllWebSocketData
       })
     },
     chatRoomAllWebSocketData (data) {
-      console.log(`>> >> >> ${data}`)
+      this.chatList.forEach(c => {
+        if (c.chatRoomId == data.chatRoom.chatRoomId) {
+          c.lastMessage = data.chatRoom.lastMessage
+          c.lastMessageTime = data.chatRoom.lastMessageTime
+        }
+      })
     },
     chatRommList () {
       this.axios.get(`/api/v1/chat`).then(res => {
@@ -123,6 +132,13 @@ export default {
       })
     },
     chatRoomOpen (data) {
+      if (!!this.selectChatRoomId) {
+        this.closeSubscription({
+          subscriptionUrl: `/api/subscribe/message/${this.selectChatRoomId}`,
+          id: `chatRoom_${this.selectChatRoomId}`
+        })
+      }
+
       this.selectChatRoomId = data.chatRoomId
       this.openMessageList = []
       this.axios.get(`/api/v1/chat/${data.chatRoomId}`, {
@@ -143,6 +159,11 @@ export default {
               return d
             }))
           }
+          this.subscribe({
+            subscriptionUrl: `/api/subscribe/message/${data[0].chatRoom.chatRoomId}`,
+            id: `chatRoom_${data[0].chatRoom.chatRoomId}`,
+            callBack: this.chatMessageAdd
+          })
         } else {
           alert(res.message)
         }
@@ -150,6 +171,20 @@ export default {
     },
     isSelectOn (chatRoomid) {
       return this.selectChatRoomId === chatRoomid
+    },
+    chatMessageAdd (data) {
+      data['isMy'] = data.sendUser.id === this.userId
+      this.openMessageList.push(data)
+    },
+    send() {
+      this.axios.post(`/api/v1/chat/${this.selectChatRoomId}`, {
+        userId: this.userId,
+        text: this.textMessage
+      }).then(res => {
+        if (res.status == 200 && res.data.code === 0) {
+          this.textMessage = ''
+        }
+      })
     }
   }
 }
